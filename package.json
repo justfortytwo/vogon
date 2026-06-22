@@ -1,0 +1,50 @@
+{
+  "name": "@justfortytwo/gate",
+  "version": "0.1.0",
+  "description": "Standalone, agent-agnostic PreToolUse safety gate for Claude Code: an autonomy-tier policy engine, a fail-closed bash allowlist, and a hook that turns dangerous tool calls into one-shot approvals.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./gate-hook": "./dist/gate-hook.js"
+  },
+  "bin": {
+    "justfortytwo-gate-hook": "./dist/gate-hook.js"
+  },
+  "files": [
+    "dist",
+    "hooks",
+    ".claude-plugin",
+    "examples",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest"
+  },
+  "keywords": [
+    "claude-code",
+    "claude-code-plugin",
+    "pretooluse",
+    "hook",
+    "safety",
+    "policy",
+    "allowlist",
+    "agent",
+    "guardrail"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0"
+  }
+}

@@ -1,0 +1,30 @@
+# Example bash allowlist. Human-editable JSONL; malformed or expired lines are ignored.
+# Copy this to rules/bash-allowlist.jsonl in your project (or point the gate at it
+# via the GATE_BASH_ALLOWLIST env var).
+#
+# Fields: command_glob (required), cwd_glob (optional, default *), expires_at
+# (optional ISO 8601), approved_by (optional), note (optional).
+#
+# Bash fails CLOSED: a command that is not matched here (and is not an auto
+# read/internal tool) is deferred for approval. This file is the ONE place
+# known-safe commands are permitted. Make it a [guard] file so the agent cannot
+# silently weaken it — only you can.
+#
+# SECURITY: command_glob is anchored (^...$) and matched against the WHOLE command.
+#   - Prefer EXACT commands (no trailing *). An exact glob like "npm test" will NOT
+#     match "npm test && curl evil" — that is the point.
+#   - A trailing * (e.g. "git diff *") re-enables command chaining
+#     ("git diff x && rm -rf /"), so use it sparingly and only for safe verbs.
+#   - DENY ALWAYS WINS: any command flagged by a [bash] pattern in capabilities.toml
+#     (git push, curl --data/wget, chmod, rm -rf, sudo, ...) can NEVER be permitted
+#     here, even with a matching glob. A broad "git *" will fast-path "git status"
+#     but still defers "git push" for approval.
+#
+# Starter set: read-only inspection + in-repo dev commands.
+{"command_glob":"git status","note":"read-only repo status"}
+{"command_glob":"git diff","note":"read-only unstaged diff"}
+{"command_glob":"git diff --staged","note":"read-only staged diff"}
+{"command_glob":"git log --oneline -20","note":"read-only recent history"}
+{"command_glob":"git branch","note":"read-only branch list"}
+{"command_glob":"npm test","note":"in-repo test script"}
+{"command_glob":"npm run build","note":"in-repo build script"}

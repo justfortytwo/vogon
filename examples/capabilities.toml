@@ -1,0 +1,70 @@
+# Example capability manifest — the safety gate's source of truth.
+#
+# Copy this to .claude/policy/capabilities.toml in your project (or point the gate
+# at it via the GATE_MANIFEST env var) and tune it to your tools.
+#
+# Every tool the agent can call is tagged with an autonomy tier:
+#   read          auto    — fetch/lookup (web, files)
+#   internal      auto     — own workspace: notes, files, todos
+#   draft         auto     — produce drafts, stage work
+#   external      confirm  — outward message/email/post to a 3rd party
+#   irreversible  confirm  — payments, deletes, signing, AND editing this guard
+#
+# On an [external]/[irreversible] call the PreToolUse hook defers (pauses the turn),
+# stages a one-shot approval, and only an out-of-band approval lets it run once.
+# THIS FILE IS ITSELF GUARDED (see [guard]); the agent cannot silently weaken it.
+
+default_tier = "external"
+
+[tiers]
+# --- read-only native tools ---
+"Read" = "read"
+"Glob" = "read"
+"Grep" = "read"
+"WebFetch" = "read"
+"WebSearch" = "read"
+# --- own-workspace native tools ---
+"TodoWrite" = "internal"
+"Write" = "internal"
+"Edit" = "internal"
+"NotebookEdit" = "internal"
+"Task" = "internal"
+"ExitPlanMode" = "internal"
+"AskUserQuestion" = "internal"
+# Bash: fails CLOSED. Base tier is external (defer) — the [bash] patterns below
+# only ELEVATE (e.g. to irreversible), never lower it. An unmatched command is
+# deferred for approval, not auto-run. Known-safe commands are permitted via the
+# bash allowlist JSONL (allowlist), not by tiering them down here.
+"Bash" = "external"
+# --- example: a third-party messaging MCP — anything outward is external ---
+"mcp__messaging__*" = "external"
+
+# Bash command patterns (JS regex) that ELEVATE the tier above the external base.
+# Highest matching tier wins; patterns can only raise, never lower. They double as
+# a DENYLIST: a command matching ANY pattern here can never be satisfied by the
+# bash allowlist (deny always wins), so a broad allowlist glob like `git *` cannot
+# launder `git push`. Their job is to flag the clearly-dangerous commands; ordinary
+# commands are already deferred by the external base.
+# NOTE: these are JS-regex literals consumed by the gate's own raw-passthrough TOML
+# parser, so use SINGLE backslashes (\b, \s) — not the doubled \\b a strict TOML
+# parser would require.
+[bash]
+"\brm\s+(-[a-zA-Z]*r[a-zA-Z]*f?|--force)\b" = "irreversible"
+"\brm\s+-rf?\b" = "irreversible"
+"\bdd\s+if=" = "irreversible"
+"\bmkfs\b" = "irreversible"
+":\(\)\s*\{.*\}\s*;\s*:" = "irreversible"   # fork bomb
+"\bsudo\b" = "irreversible"
+"\bchmod\b|\bchown\b" = "external"
+"\bgit\s+push\b" = "external"
+"\bcurl\b.*-X\s*POST|\bcurl\b.*--data|\bwget\b" = "external"
+"\bDROP\s+TABLE\b|\bDELETE\s+FROM\b" = "external"
+
+# Editing these files is [irreversible] — protect the guard.
+# Project-relative paths.
+[guard]
+files = [
+  ".claude/policy/capabilities.toml",
+  ".claude/settings.json",
+  "rules/bash-allowlist.jsonl",
+]
