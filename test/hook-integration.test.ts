@@ -1,6 +1,6 @@
 // End-to-end: drive the REAL built artifacts as subprocesses, the way Claude Code
 // runs them — gate-hook.js reads a PreToolUse event on stdin and prints a
-// permissionDecision; the vogon CLI clears a deferred approval out of band.
+// permissionDecision; the gate CLI clears a deferred approval out of band.
 import { describe, it, expect, beforeAll } from 'vitest';
 import { spawnSync, execFileSync } from 'node:child_process';
 import { mkdtempSync, mkdirSync, writeFileSync } from 'node:fs';
@@ -19,7 +19,7 @@ default_tier = "external"
 `;
 
 function newProject(): string {
-  const dir = mkdtempSync(join(tmpdir(), 'vogon-e2e-'));
+  const dir = mkdtempSync(join(tmpdir(), 'gate-e2e-'));
   mkdirSync(join(dir, '.claude', 'policy'), { recursive: true });
   writeFileSync(join(dir, '.claude', 'policy', 'capabilities.toml'), MANIFEST);
   return dir;

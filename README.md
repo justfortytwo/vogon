@@ -1,4 +1,4 @@
-# @justfortytwo/vogon
+# @justfortytwo/gate
 
 A standalone, agent-agnostic **PreToolUse safety gate** for Claude Code.
 
@@ -32,10 +32,10 @@ stop and wait for you, while genuinely safe, known operations stay fast.
 ## Install
 
 ```sh
-npm install @justfortytwo/vogon
+npm install @justfortytwo/gate
 ```
 
-`@justfortytwo/vogon` is a leaf package — it has **no `@justfortytwo/*` peer
+`@justfortytwo/gate` is a leaf package — it has **no `@justfortytwo/*` peer
 dependencies**.
 
 ## Use as a Claude Code plugin (recommended)
@@ -72,7 +72,7 @@ Add to `.claude/settings.json`:
       {
         "matcher": "*",
         "hooks": [
-          { "type": "command", "command": "node node_modules/@justfortytwo/vogon/dist/gate-hook.js" }
+          { "type": "command", "command": "node node_modules/@justfortytwo/gate/dist/gate-hook.js" }
         ]
       }
     ]
@@ -89,30 +89,30 @@ overrides a permissive `permissions.allow` list.
 
 1. The agent calls an `external`/`irreversible` tool. The gate **defers** and
    stages a pending one-shot keyed by the call's `tool_use_id`.
-2. You clear it out of band with the bundled CLI — **`vogon approve <tool_use_id>`**
-   (or `vogon deny <tool_use_id>`). A host integration can instead call
+2. You clear it out of band with the bundled CLI — **`fortytwo-gate approve <tool_use_id>`**
+   (or `fortytwo-gate deny <tool_use_id>`). A host integration can instead call
    `setDecisionByToolUseId(...)` on its own store.
 3. The agent re-fires the same call. The gate **consumes the one-shot exactly
    once** and allows it; any later re-fire is denied.
 
-## Clearing approvals — the `vogon` CLI
+## Clearing approvals — the `fortytwo-gate` CLI
 
 When the gate defers a call it stages a one-shot in the approvals store
-(`GATE_APPROVALS`, default `.gate/approvals.jsonl`). The bundled `vogon` command
+(`GATE_APPROVALS`, default `.gate/approvals.jsonl`). The bundled `fortytwo-gate` command
 lets you clear it standalone — no host required:
 
 ```sh
-vogon list                   # what's waiting: status, tier, tool_use_id, target
-vogon approve <tool_use_id>  # allow it once (the agent's next re-fire consumes it)
-vogon deny <tool_use_id>     # block it
+fortytwo-gate list                   # what's waiting: status, tier, tool_use_id, target
+fortytwo-gate approve <tool_use_id>  # allow it once (the agent's next re-fire consumes it)
+fortytwo-gate deny <tool_use_id>     # block it
 ```
 
 Run it from the **same project root** the agent runs in: the default
 `.gate/approvals.jsonl` is resolved relative to the current directory, so a
-different cwd points at a different (or empty) store. `vogon list` prints the
+different cwd points at a different (or empty) store. `fortytwo-gate list` prints the
 resolved store path so a mismatch is obvious; set `GATE_APPROVALS` to an absolute
-path to remove the ambiguity. With the package installed, invoke it as `vogon`
-(or `npx @justfortytwo/vogon`).
+path to remove the ambiguity. With the package installed, invoke it as `fortytwo-gate`
+(or `npx @justfortytwo/gate`).
 
 `approve`/`deny` only act on a **pending** call — an already-consumed (executed) or
 denied one-shot is immutable, so an approval can never be resurrected into a second
@@ -125,7 +125,7 @@ import {
   loadManifest,
   decide,
   JsonlApprovalStore,
-} from '@justfortytwo/vogon';
+} from '@justfortytwo/gate';
 
 const manifest = loadManifest('.claude/policy/capabilities.toml');
 const store = new JsonlApprovalStore('.gate/approvals.jsonl');
@@ -154,7 +154,7 @@ a principled trusted/untrusted boundary.
 ## The `policySchema` contract: `POLICY_SCHEMA_VERSION`
 
 ```ts
-import { POLICY_SCHEMA_VERSION } from '@justfortytwo/vogon'; // 1
+import { POLICY_SCHEMA_VERSION } from '@justfortytwo/gate'; // 1
 ```
 
 `POLICY_SCHEMA_VERSION` is the version of the **`policySchema` contract**: the

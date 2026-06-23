@@ -1,5 +1,5 @@
 {
-  "name": "vogon",
+  "name": "gate",
   "version": "0.1.0",
   "description": "Standalone PreToolUse safety gate: an autonomy-tier policy engine and a fail-closed bash allowlist that turn dangerous tool calls into explicit one-shot approvals."
 }

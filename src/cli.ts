@@ -1,4 +1,4 @@
-// vogon CLI: clear deferred approvals from the durable store, standalone — so the
+// gate CLI: clear deferred approvals from the durable store, standalone — so the
 // gate can complete its own approve->allow loop without a host. Pure and testable:
 // the store + output sinks are injected; the bin shim (cli-bin.ts) wires them.
 //
@@ -16,7 +16,7 @@ export interface CliOptions {
   err?: (line: string) => void;
 }
 
-const USAGE = `usage: vogon <command>
+const USAGE = `usage: fortytwo-gate <command>
   list                    list staged approvals
   approve <tool_use_id>   approve a deferred call (one-shot)
   deny <tool_use_id>      deny a deferred call`;
@@ -64,7 +64,7 @@ export async function runCli(argv: string[], opts: CliOptions): Promise<number> 
     out(`${id} ${status}`);
     return 0;
   } catch (e) {
-    err(`vogon error (fail-closed): ${e instanceof Error ? e.message : String(e)}`);
+    err(`gate error (fail-closed): ${e instanceof Error ? e.message : String(e)}`);
     return 1;
   }
 }

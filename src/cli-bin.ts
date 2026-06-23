@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Bin shim for the `vogon` CLI. Resolves the durable approval store from the same
+// Bin shim for the `gate` CLI. Resolves the durable approval store from the same
 // env/defaults the PreToolUse hook uses, then dispatches to runCli. Kept tiny so
 // the testable logic lives in cli.ts.
 import { resolve } from 'node:path';
@@ -17,6 +17,6 @@ runCli(process.argv.slice(2), {
 })
   .then((code) => process.exit(code))
   .catch((e: unknown) => {
-    process.stderr.write(`vogon error (fail-closed): ${e instanceof Error ? e.message : String(e)}\n`);
+    process.stderr.write(`gate error (fail-closed): ${e instanceof Error ? e.message : String(e)}\n`);
     process.exit(1);
   });

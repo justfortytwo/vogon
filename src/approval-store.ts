@@ -3,7 +3,7 @@
 // with a transactional database and surfaced approvals over a chat bridge; the
 // gate only needs the small contract below.
 //
-//   TODO(wire): a host integration (e.g. @justfortytwo/guide) may provide a
+//   TODO(wire): a host integration (e.g. @justfortytwo/memory) may provide a
 //   richer, transactional ApprovalStore + an AuditLogger that persists to its own
 //   store and notifies an approver channel. Pass it to decide() via opts.store /
 //   opts.audit. The two implementations here keep the gate fully standalone.

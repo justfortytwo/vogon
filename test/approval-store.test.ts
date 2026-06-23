@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { JsonlApprovalStore, InMemoryApprovalStore, type ApprovalStore } from '../src/index.js';
 
 function tmpFile(): string {
-  return join(mkdtempSync(join(tmpdir(), 'vogon-store-')), 'approvals.jsonl');
+  return join(mkdtempSync(join(tmpdir(), 'gate-store-')), 'approvals.jsonl');
 }
 
 const stores: Array<[string, () => ApprovalStore]> = [

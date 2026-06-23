@@ -1,4 +1,4 @@
-// @justfortytwo/vogon — a standalone, agent-agnostic PreToolUse safety gate.
+// @justfortytwo/gate — a standalone, agent-agnostic PreToolUse safety gate.
 //
 // Public API:
 //   - the capability manifest + classifier + defer/allow/deny engine  (./gate)

@@ -7,8 +7,8 @@
 //
 //   TODO(wire): the original host backed ApprovalStore/AuditLogger with its own
 //   transactional store (a memory/DB package). That binding belongs to a host
-//   integration package — @justfortytwo/guide exports an ApprovalStore
-//   implementation (see its vogon-approval-store.ts) and wires it in. The gate
+//   integration package — @justfortytwo/memory exports an ApprovalStore
+//   implementation (see its gate-approval-store.ts) and wires it in. The gate
 //   ships only the in-memory + JSONL stores below so it stands alone.
 
 import { readFileSync } from 'node:fs';

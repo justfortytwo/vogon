@@ -11,7 +11,7 @@ import {
 } from '../src/index.js';
 
 function tmpDir(): string {
-  return mkdtempSync(join(tmpdir(), 'vogon-allow-'));
+  return mkdtempSync(join(tmpdir(), 'gate-allow-'));
 }
 const future = '2999-01-01T00:00:00.000Z';
 const past = '2000-01-01T00:00:00.000Z';
