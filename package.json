@@ -1,6 +1,6 @@
 {
   "name": "@justfortytwo/gate",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Standalone, agent-agnostic PreToolUse safety gate for Claude Code: an autonomy-tier policy engine, a fail-closed bash allowlist, and a hook that turns dangerous tool calls into one-shot approvals.",
   "license": "MIT",
   "author": {
